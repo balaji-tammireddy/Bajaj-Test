@@ -1,0 +1,10 @@
+{
+  "name": "bfhl-api",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "api/bfhl.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {}
+}
