@@ -4,7 +4,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { data } = req.body;
+    let body = req.body;
+
+    if (typeof body === "string") {
+      try {
+        body = JSON.parse(body);
+      } catch (err) {
+        return res.status(400).json({ is_success: false, error: "Invalid JSON" });
+      }
+    }
+
+    const { data } = body;
 
     if (!Array.isArray(data)) {
       return res.status(400).json({ is_success: false, error: "Invalid input" });
@@ -21,7 +31,10 @@ export default async function handler(req, res) {
     let sum = 0;
 
     data.forEach(item => {
-      if (/^\d+$/.test(item)) {
+      if (typeof item !== "string") item = String(item);
+      item = item.trim();
+
+      if (/^-?\d+$/.test(item)) {
         const num = parseInt(item, 10);
         if (num % 2 === 0) {
           even_numbers.push(item);
@@ -31,7 +44,7 @@ export default async function handler(req, res) {
         sum += num;
       } else if (/^[a-zA-Z]+$/.test(item)) {
         alphabets.push(item.toUpperCase());
-      } else {
+      } else if (item.length > 0) {
         special_characters.push(item);
       }
     });
